@@ -1,4 +1,4 @@
-# Reservas de belleza
+﻿# Reservas de belleza
 
 Plataforma de reservas y fidelización para negocios de belleza. El plan completo está en [PROYECTO.md](PROYECTO.md).
 
@@ -39,7 +39,7 @@ En Vercel, las mismas claves se cargan en **Settings → Environment Variables**
 - Cada vez que se sube un cambio a GitHub, Vercel publica la nueva versión solo.
 - **Prueba:** abrir la dirección pública y ver "Conexión con la base de datos: ✅".
 
-### Etapa 2: Cuentas y negocios
+### Etapa 2: Cuentas y negocios ✅ (2 oct 2026)
 - Tablas `negocios` y `equipo_usuarios` con seguridad por filas: cada usuaria solo ve y cambia su propio negocio.
 - Los visitantes sin cuenta solo ven el nombre y la dirección del negocio (función `negocio_publico`).
 - Páginas: `/registro`, `/ingresar`, `/panel` (crear negocio, ver equipo, cerrar sesión) y `/[dirección-del-negocio]`.
@@ -60,3 +60,6 @@ Necesita `DATABASE_URL` en `.env.local` (Supabase → Connect → Direct → Ses
 - Pasar Vercel al plan Pro (el plan Hobby no permite uso comercial).
 - Pasar Supabase a un plan pago para tener copias de seguridad diarias.
 - Comprar un dominio propio (necesario para enviar correos a clientas con Resend).
+
+## Datos de prueba
+- Negocios de prueba creados en la Etapa 2: **Uñas de Ana** (/unas-de-ana) y **peluqueria bea** (/peluqueria-bea), con correos contecoyadaniela+ana@gmail.com y contecoyadaniela+bea@gmail.com. Se borrarán antes del piloto.
