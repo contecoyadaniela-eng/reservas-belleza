@@ -28,7 +28,7 @@ export default async function PanelPage() {
           </h1>
         </div>
         <form action={salir}>
-          <button className="text-sm text-stone-500 hover:text-rose-600 hover:underline">
+          <button className="whitespace-nowrap rounded-xl border border-stone-200 px-3 py-1.5 text-sm font-medium text-stone-700 hover:border-rose-300 hover:text-rose-600">
             Cerrar sesión
           </button>
         </form>
