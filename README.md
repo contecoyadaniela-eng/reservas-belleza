@@ -24,6 +24,7 @@ Las claves van en el archivo `.env.local`, que **nunca** se sube a GitHub. El ar
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Supabase → tu proyecto → botón **Connect** (arriba) → pestaña **App Frameworks**; o **Project Settings → Data API** |
 | `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → **Project Settings → API Keys** → *Publishable key* (empieza con `sb_publishable_`) |
+| `DATABASE_URL` | Supabase → **Connect → Direct → Session pooler**. Solo se usa en tu computadora para aplicar cambios y correr pruebas; **no** va en Vercel |
 
 En Vercel, las mismas claves se cargan en **Settings → Environment Variables** del proyecto.
 
@@ -38,7 +39,23 @@ En Vercel, las mismas claves se cargan en **Settings → Environment Variables**
 - Cada vez que se sube un cambio a GitHub, Vercel publica la nueva versión solo.
 - **Prueba:** abrir la dirección pública y ver "Conexión con la base de datos: ✅".
 
+### Etapa 2: Cuentas y negocios
+- Tablas `negocios` y `equipo_usuarios` con seguridad por filas: cada usuaria solo ve y cambia su propio negocio.
+- Los visitantes sin cuenta solo ven el nombre y la dirección del negocio (función `negocio_publico`).
+- Páginas: `/registro`, `/ingresar`, `/panel` (crear negocio, ver equipo, cerrar sesión) y `/[dirección-del-negocio]`.
+- "Confirm email" está apagado en Supabase mientras construimos.
+- **Prueba automática:** `npm run prueba:aislamiento` crea dos negocios de prueba, comprueba que ninguno ve al otro y los borra.
+- **Prueba manual:** crear dos cuentas con dos negocios; en el panel, la "Prueba de privacidad" debe mostrar 1 negocio y 1 persona en cada una.
+
+## Cambios en la base de datos
+Cada cambio es un archivo en `supabase/migrations`. Para aplicarlos en Supabase:
+```
+npm run db:aplicar
+```
+Necesita `DATABASE_URL` en `.env.local` (Supabase → Connect → Direct → Session pooler, con la contraseña de la base de datos en lugar de `[YOUR-PASSWORD]`).
+
 ## Pendientes para antes de vender
+- Reactivar "Confirm email" en Supabase y enviar los correos de inicio de sesión por Resend.
 - Activar la verificación en dos pasos (2FA) en GitHub y en Vercel.
 - Pasar Vercel al plan Pro (el plan Hobby no permite uso comercial).
 - Pasar Supabase a un plan pago para tener copias de seguridad diarias.

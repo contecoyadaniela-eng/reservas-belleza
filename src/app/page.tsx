@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { checkSupabaseConnection } from "@/lib/supabase/check-connection";
 
 // Check the connection on every visit instead of once at build time.
@@ -16,7 +17,20 @@ export default async function Home() {
         <p className="mt-2 text-stone-600">
           Reserva tu cita en segundos y acumula sellos de fidelidad.
         </p>
-        <p className="mt-6 text-sm text-stone-500">Muy pronto disponible.</p>
+        <div className="mt-6 flex flex-col gap-2 sm:flex-row sm:justify-center">
+          <Link
+            href="/registro"
+            className="rounded-xl bg-rose-500 px-4 py-2.5 font-medium text-white hover:bg-rose-600"
+          >
+            Crear cuenta para mi negocio
+          </Link>
+          <Link
+            href="/ingresar"
+            className="rounded-xl border border-stone-200 px-4 py-2.5 font-medium text-stone-700 hover:border-rose-300"
+          >
+            Iniciar sesión
+          </Link>
+        </div>
 
         <div
           className={`mt-8 rounded-2xl px-4 py-3 text-sm ${
