@@ -29,8 +29,17 @@ En Vercel, las mismas claves se cargan en **Settings → Environment Variables**
 
 ## Historial por etapa
 
-### Etapa 1: Base (en curso)
+### Etapa 1: Base ✅ (2 oct 2026)
 - Proyecto Next.js con TypeScript y Tailwind (estilos) creado.
 - Instaladas las piezas oficiales de Supabase (`@supabase/supabase-js` y `@supabase/ssr`).
 - Página de inicio en español que comprueba la conexión con Supabase y muestra ✅ o ❌.
-- Pendiente: subir a GitHub y publicar en Vercel.
+- Código en GitHub: https://github.com/contecoyadaniela-eng/reservas-belleza (privado).
+- Publicado en Vercel: https://reservas-belleza.vercel.app
+- Cada vez que se sube un cambio a GitHub, Vercel publica la nueva versión solo.
+- **Prueba:** abrir la dirección pública y ver "Conexión con la base de datos: ✅".
+
+## Pendientes para antes de vender
+- Activar la verificación en dos pasos (2FA) en GitHub y en Vercel.
+- Pasar Vercel al plan Pro (el plan Hobby no permite uso comercial).
+- Pasar Supabase a un plan pago para tener copias de seguridad diarias.
+- Comprar un dominio propio (necesario para enviar correos a clientas con Resend).
