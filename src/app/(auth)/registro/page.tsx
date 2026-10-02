@@ -10,8 +10,8 @@ export default function RegistroPage() {
 
   return (
     <Card>
-      <h1 className="text-2xl font-semibold text-stone-800">Crea tu cuenta</h1>
-      <p className="mt-1 text-sm text-stone-600">Para dueñas de negocios de belleza.</p>
+      <h1 className="text-2xl font-semibold text-neutral-800">Crea tu cuenta</h1>
+      <p className="mt-1 text-sm text-neutral-600">Para dueñas de negocios de belleza.</p>
 
       <form action={action} className="mt-6 space-y-4">
         <Field label="Tu nombre" name="nombre" required autoComplete="name" />
@@ -29,9 +29,9 @@ export default function RegistroPage() {
         <SubmitButton pending={pending}>Crear cuenta</SubmitButton>
       </form>
 
-      <p className="mt-6 text-center text-sm text-stone-600">
+      <p className="mt-6 text-center text-sm text-neutral-600">
         ¿Ya tienes cuenta?{" "}
-        <Link href="/ingresar" className="font-medium text-rose-600 hover:underline">
+        <Link href="/ingresar" className="font-medium text-neutral-900 underline hover:underline">
           Inicia sesión
         </Link>
       </p>

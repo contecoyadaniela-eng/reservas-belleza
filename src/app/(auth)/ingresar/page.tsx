@@ -10,8 +10,8 @@ export default function IngresarPage() {
 
   return (
     <Card>
-      <h1 className="text-2xl font-semibold text-stone-800">Inicia sesión</h1>
-      <p className="mt-1 text-sm text-stone-600">Entra al panel de tu negocio.</p>
+      <h1 className="text-2xl font-semibold text-neutral-800">Inicia sesión</h1>
+      <p className="mt-1 text-sm text-neutral-600">Entra al panel de tu negocio.</p>
 
       <form action={action} className="mt-6 space-y-4">
         <Field label="Correo" name="correo" type="email" required autoComplete="email" />
@@ -26,9 +26,9 @@ export default function IngresarPage() {
         <SubmitButton pending={pending}>Entrar</SubmitButton>
       </form>
 
-      <p className="mt-6 text-center text-sm text-stone-600">
+      <p className="mt-6 text-center text-sm text-neutral-600">
         ¿No tienes cuenta?{" "}
-        <Link href="/registro" className="font-medium text-rose-600 hover:underline">
+        <Link href="/registro" className="font-medium text-neutral-900 underline hover:underline">
           Créala aquí
         </Link>
       </p>
