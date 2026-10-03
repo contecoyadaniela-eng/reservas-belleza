@@ -52,6 +52,7 @@ En Vercel, las mismas claves se cargan en **Settings → Environment Variables**
 - Panel con menú **Resumen · Mi página · Servicios · Contacto**.
 - **Mi página:** nombre, logo, 6 paletas listas o 9 colores a mano, 3 tipos de letra, barra de anuncio, portada de una o dos fotos, **secciones de contenido libres** (agregar, quitar y ordenar hasta 8, con foto a la izquierda o a la derecha) y galería, con vista previa en vivo (computadora o celular) y botón "Guardar y publicar".
 - Los cambios sin publicar se guardan como borrador en el navegador y se recuperan al recargar.
+- Todas las fotos se pueden **recortar y encuadrar** con la forma exacta de su lugar (servicios cuadrados, portada horizontal, galería vertical…), al subirlas o después con el botón "Recortar".
 - **Servicios:** agregar, quitar y ordenar; nombre, descripción, foto, duración y precio opcional (vacío = no se muestra); moneda de cualquier país de Sudamérica.
 - **Contacto:** dirección, horario, WhatsApp, correo e Instagram (los vacíos no se muestran).
 - Fotos en Supabase Storage (carpeta por negocio); se achican en el navegador antes de subir.
@@ -66,6 +67,9 @@ Cada cambio es un archivo en `supabase/migrations`. Para aplicarlos en Supabase:
 npm run db:aplicar
 ```
 Necesita `DATABASE_URL` en `.env.local` (Supabase → Connect → Direct → Session pooler, con la contraseña de la base de datos en lugar de `[YOUR-PASSWORD]`).
+
+## Pendientes técnicos
+- `npm audit` avisa de un problema en `braces` (usado solo por el revisor de código `eslint-config-next`, no llega a la página publicada). Actualizar `eslint-config-next` cuando salga la versión corregida; no usar `npm audit fix --force` porque instala una versión antigua.
 
 ## Pendientes para antes de vender
 - Reactivar "Confirm email" en Supabase y enviar los correos de inicio de sesión por Resend.
