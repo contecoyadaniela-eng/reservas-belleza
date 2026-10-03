@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { guardarPagina } from "@/app/panel/actions";
 import { SubirImagen } from "@/components/panel/subir-imagen";
+import { AvisoBorrador, NotaBorrador } from "@/components/panel/aviso-borrador";
+import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/borrador";
 import { FUENTES, type FuenteId } from "@/lib/pagina/fuentes";
 import type { Bloque, PaginaConfig, PaginaNegocio } from "@/lib/pagina/tipos";
 
@@ -29,12 +31,45 @@ const NOMBRES_COLORES: { clave: keyof Colores; nombre: string; ayuda: string }[]
   { clave: "anuncioTexto", nombre: "Texto de la barra", ayuda: "Letras de la barra de arriba" },
 ];
 
+type DatosBorrador = { nombre: string; pagina: PaginaConfig };
+
+// A draft saved by an older version may lack newer fields: fill them from the published page.
+function mezclarConPublicada(publicada: PaginaConfig, borrador: Partial<PaginaConfig>): PaginaConfig {
+  const resultado = { ...publicada } as Record<string, unknown>;
+  for (const [clave, valor] of Object.entries(borrador)) {
+    const base = resultado[clave];
+    resultado[clave] =
+      base && typeof base === "object" && !Array.isArray(base) && valor && typeof valor === "object" && !Array.isArray(valor)
+        ? { ...base, ...valor }
+        : valor;
+  }
+  return resultado as PaginaConfig;
+}
+
 export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
+  const claveBorrador = `borrador-pagina-${negocio.id}`;
   const [nombre, setNombre] = useState(negocio.nombre);
   const [pagina, setPagina] = useState<PaginaConfig>(negocio.pagina);
   const [sinGuardar, setSinGuardar] = useState(false);
+  const [borradorDe, setBorradorDe] = useState<string | null>(null);
   const [estado, setEstado] = useState<{ tipo: "ok" | "error"; texto: string } | null>(null);
   const [guardando, setGuardando] = useState(false);
+
+  // Restore unpublished edits from this browser after a reload.
+  useEffect(() => {
+    const b = leerBorrador<DatosBorrador>(claveBorrador);
+    if (!b) return;
+    /* eslint-disable react-hooks/set-state-in-effect -- localStorage only exists in the browser, after the first render */
+    setNombre(b.datos.nombre ?? negocio.nombre);
+    setPagina(mezclarConPublicada(negocio.pagina, b.datos.pagina ?? {}));
+    setSinGuardar(true);
+    setBorradorDe(b.fecha);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [claveBorrador, negocio]);
+
+  useEffect(() => {
+    if (sinGuardar) guardarBorrador<DatosBorrador>(claveBorrador, { nombre, pagina });
+  }, [sinGuardar, nombre, pagina, claveBorrador]);
 
   const cambiar = useCallback((fn: (p: PaginaConfig) => PaginaConfig) => {
     setPagina(fn);
@@ -42,19 +77,24 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
     setEstado(null);
   }, []);
 
-  useEffect(() => {
-    if (!sinGuardar) return;
-    const avisar = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", avisar);
-    return () => window.removeEventListener("beforeunload", avisar);
-  }, [sinGuardar]);
+  function descartar() {
+    if (!confirm("¿Descartar los cambios sin publicar y volver a la versión publicada?")) return;
+    borrarBorrador(claveBorrador);
+    setNombre(negocio.nombre);
+    setPagina(negocio.pagina);
+    setSinGuardar(false);
+    setBorradorDe(null);
+    setEstado(null);
+  }
 
   async function publicar() {
     setGuardando(true);
     const r = await guardarPagina({ nombre, pagina });
     setGuardando(false);
     if (r.ok) {
+      borrarBorrador(claveBorrador);
       setSinGuardar(false);
+      setBorradorDe(null);
       setEstado({ tipo: "ok", texto: "¡Publicado! Tus clientas ya ven los cambios." });
     } else {
       setEstado({ tipo: "error", texto: r.error ?? "No se pudo guardar." });
@@ -69,6 +109,7 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[400px_1fr]">
       <div className="space-y-3">
+        {borradorDe && <AvisoBorrador fecha={borradorDe} onDescartar={descartar} />}
         <Grupo titulo="Marca" abierto>
           <Texto etiqueta="Nombre del negocio" valor={nombre} max={80} onCambio={(v) => { setNombre(v); setSinGuardar(true); }} />
           <SubirImagen
@@ -221,6 +262,7 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
           >
             {guardando ? "Publicando…" : sinGuardar ? "Guardar y publicar" : "Todo publicado"}
           </button>
+          {sinGuardar && <NotaBorrador />}
         </div>
       </div>
 

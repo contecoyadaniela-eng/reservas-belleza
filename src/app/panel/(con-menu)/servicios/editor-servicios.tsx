@@ -3,7 +3,9 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { guardarServicios, type ServicioEditable } from "@/app/panel/actions";
+import { AvisoBorrador, NotaBorrador } from "@/components/panel/aviso-borrador";
 import { SubirImagen } from "@/components/panel/subir-imagen";
+import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/borrador";
 import { Caja } from "@/components/ui";
 import { MONEDAS, formatoPrecio, leerPrecio, type MonedaId } from "@/lib/pagina/monedas";
 import type { Servicio } from "@/lib/pagina/tipos";
@@ -27,18 +29,39 @@ export function EditorServicios({
   monedaInicial: MonedaId;
   serviciosIniciales: Servicio[];
 }) {
+  const claveBorrador = `borrador-servicios-${negocioId}`;
   const [moneda, setMoneda] = useState<MonedaId>(monedaInicial);
-  const [filas, setFilas] = useState<Fila[]>(serviciosIniciales.map(aFila));
+  const [filas, setFilas] = useState<Fila[]>(() => serviciosIniciales.map(aFila));
   const [sinGuardar, setSinGuardar] = useState(false);
+  const [borradorDe, setBorradorDe] = useState<string | null>(null);
   const [guardando, setGuardando] = useState(false);
   const [estado, setEstado] = useState<{ tipo: "ok" | "error"; texto: string } | null>(null);
 
+  // Restore unpublished edits from this browser after a reload.
   useEffect(() => {
-    if (!sinGuardar) return;
-    const avisar = (e: BeforeUnloadEvent) => e.preventDefault();
-    window.addEventListener("beforeunload", avisar);
-    return () => window.removeEventListener("beforeunload", avisar);
-  }, [sinGuardar]);
+    const b = leerBorrador<{ moneda: MonedaId; filas: Fila[] }>(claveBorrador);
+    if (!b || !Array.isArray(b.datos.filas)) return;
+    /* eslint-disable react-hooks/set-state-in-effect -- localStorage only exists in the browser, after the first render */
+    if (b.datos.moneda in MONEDAS) setMoneda(b.datos.moneda);
+    setFilas(b.datos.filas);
+    setSinGuardar(true);
+    setBorradorDe(b.fecha);
+    /* eslint-enable react-hooks/set-state-in-effect */
+  }, [claveBorrador]);
+
+  useEffect(() => {
+    if (sinGuardar) guardarBorrador(claveBorrador, { moneda, filas });
+  }, [sinGuardar, moneda, filas, claveBorrador]);
+
+  function descartar() {
+    if (!confirm("¿Descartar los cambios sin publicar y volver a los servicios publicados?")) return;
+    borrarBorrador(claveBorrador);
+    setMoneda(monedaInicial);
+    setFilas(serviciosIniciales.map(aFila));
+    setSinGuardar(false);
+    setBorradorDe(null);
+    setEstado(null);
+  }
 
   function marcar() {
     setSinGuardar(true);
@@ -101,7 +124,9 @@ export function EditorServicios({
       const ids = r.ids;
       // New services now exist in the database; remember their ids.
       setFilas((fs) => fs.map((f, i) => ({ ...f, id: ids[i] })));
+      borrarBorrador(claveBorrador);
       setSinGuardar(false);
+      setBorradorDe(null);
       setEstado({ tipo: "ok", texto: "¡Servicios publicados!" });
     } else {
       setEstado({ tipo: "error", texto: r.error ?? "No se pudo guardar." });
@@ -110,6 +135,7 @@ export function EditorServicios({
 
   return (
     <div className="mx-auto max-w-3xl space-y-6">
+      {borradorDe && <AvisoBorrador fecha={borradorDe} onDescartar={descartar} />}
       <Caja titulo="Moneda">
         <select
           value={moneda}
@@ -199,6 +225,7 @@ export function EditorServicios({
             {guardando ? "Publicando…" : sinGuardar ? "Guardar y publicar" : "Todo publicado"}
           </button>
         </div>
+        {sinGuardar && <NotaBorrador />}
       </div>
     </div>
   );
