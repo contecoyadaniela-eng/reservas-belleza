@@ -178,7 +178,7 @@ export function EditorServicios({
           </div>
 
           <div className="grid gap-5 sm:grid-cols-[auto_1fr]">
-            <SubirImagen negocioId={negocioId} etiqueta="Foto" valor={f.foto} proporcion="aspect-square" onCambio={(url) => cambiar(f.clave, { foto: url })} />
+            <SubirImagen negocioId={negocioId} etiqueta="Foto" valor={f.foto} proporcion="aspect-square" aspecto={1} onCambio={(url) => cambiar(f.clave, { foto: url })} />
             <div className="space-y-4">
               <label className="block">
                 <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-600">Nombre</span>

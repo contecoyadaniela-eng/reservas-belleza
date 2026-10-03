@@ -221,7 +221,8 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
                 negocioId={negocio.id}
                 etiqueta={pagina.portada.modo === "una" ? "Foto de portada" : i === 0 ? "Foto izquierda" : "Foto derecha"}
                 valor={pagina.portada.imagenes[i]}
-                proporcion={pagina.portada.modo === "una" ? "aspect-[16/9]" : "aspect-[3/4]"}
+                proporcion={pagina.portada.modo === "una" ? "aspect-[16/9]" : "aspect-[4/5]"}
+                aspecto={pagina.portada.modo === "una" ? 16 / 9 : 4 / 5}
                 onCambio={(url) =>
                   cambiar((p) => {
                     const imagenes = [...p.portada.imagenes] as [string, string];
@@ -259,7 +260,14 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
                 opciones={[["izquierda", "Foto a la izquierda"], ["derecha", "Foto a la derecha"]]}
                 onCambio={(v) => cambiarBloque(i, { lado: v })}
               />
-              <SubirImagen negocioId={negocio.id} etiqueta="Foto" valor={b.imagen} onCambio={(url) => cambiarBloque(i, { imagen: url })} />
+              <SubirImagen
+                negocioId={negocio.id}
+                etiqueta="Foto"
+                valor={b.imagen}
+                proporcion={b.lado === "izquierda" ? "aspect-[4/3]" : "aspect-[4/5]"}
+                aspecto={b.lado === "izquierda" ? 4 / 3 : 4 / 5}
+                onCambio={(url) => cambiarBloque(i, { imagen: url })}
+              />
               <Texto etiqueta="Título" valor={b.titulo} max={80} onCambio={(v) => cambiarBloque(i, { titulo: v })} />
               <AreaTexto etiqueta="Texto" valor={b.texto} max={400} onCambio={(v) => cambiarBloque(i, { texto: v })} />
               <div className="grid grid-cols-2 gap-3">
@@ -297,6 +305,7 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
                 etiqueta={`Foto ${i + 1}`}
                 valor={pagina.galeria.imagenes[i]}
                 proporcion="aspect-[4/5]"
+                aspecto={4 / 5}
                 onCambio={(url) =>
                   cambiar((p) => {
                     const imagenes = [...p.galeria.imagenes] as [string, string, string];

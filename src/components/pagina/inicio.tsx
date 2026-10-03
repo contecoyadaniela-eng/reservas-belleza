@@ -90,7 +90,7 @@ export function Inicio({ negocio }: { negocio: PaginaNegocio }) {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-6">
           {galeria.imagenes.map((src, i) => (
             <div key={i} className={`bg-white p-2 pb-8 shadow-lg ${["-rotate-3", "rotate-2", "-rotate-1"][i]}`}>
-              <div className="relative h-56 w-48 sm:h-64 sm:w-56">
+              <div className="relative aspect-[4/5] w-48 sm:w-56">
                 <Image src={src} alt="" fill sizes="224px" className="object-cover" />
               </div>
             </div>
