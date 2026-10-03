@@ -1,12 +1,19 @@
 import type { FuenteId } from "./fuentes";
 import type { MonedaId } from "./monedas";
 
+// Free content sections between the services and the gallery:
+// the owner can add, remove and reorder them.
 export type Bloque = {
+  id: string;
+  lado: "izquierda" | "derecha"; // side of the photo
   titulo: string;
   texto: string;
-  boton: string;
+  boton: string; // empty = no button
+  enlace: "servicios" | "reservar" | "contacto";
   imagen: string;
 };
+
+export const MAX_BLOQUES = 8;
 
 // Everything a business can customize on its home page. The structure
 // (which blocks exist and their order) is the same for every business.
@@ -27,8 +34,7 @@ export type PaginaConfig = {
   anuncio: { texto: string };
   portada: { modo: "una" | "dos"; imagenes: [string, string]; boton: string };
   destacados: { titulo: string };
-  bloqueImagenTexto: Bloque;
-  bloqueTextoImagen: Bloque;
+  bloques: Bloque[];
   galeria: { titulo: string; texto: string; boton: string; imagenes: [string, string, string] };
 };
 

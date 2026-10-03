@@ -27,18 +27,26 @@ export function paginaInicial(nombre: string): PaginaConfig {
       boton: "Reservar",
     },
     destacados: { titulo: "Nuestros servicios" },
-    bloqueImagenTexto: {
-      titulo: "Detalle. Forma. Brillo.",
-      texto: "Cada servicio está pensado para durar: preparación cuidadosa, productos de calidad y un acabado impecable.",
-      boton: "Ver servicios",
-      imagen: foto("1632345031435-8727f6897d53"),
-    },
-    bloqueTextoImagen: {
-      titulo: `${nombre} — belleza consciente`,
-      texto: "Creemos en una belleza sin prisas y sin complicaciones. Un espacio tranquilo, atención personalizada y resultados que te hacen sentir tú.",
-      boton: "Contáctanos",
-      imagen: foto("1515377905703-c4788e51af15"),
-    },
+    bloques: [
+      {
+        id: "inicial-1",
+        lado: "izquierda",
+        titulo: "Detalle. Forma. Brillo.",
+        texto: "Cada servicio está pensado para durar: preparación cuidadosa, productos de calidad y un acabado impecable.",
+        boton: "Ver servicios",
+        enlace: "servicios",
+        imagen: foto("1632345031435-8727f6897d53"),
+      },
+      {
+        id: "inicial-2",
+        lado: "derecha",
+        titulo: `${nombre} — belleza consciente`,
+        texto: "Creemos en una belleza sin prisas y sin complicaciones. Un espacio tranquilo, atención personalizada y resultados que te hacen sentir tú.",
+        boton: "Contáctanos",
+        enlace: "contacto",
+        imagen: foto("1515377905703-c4788e51af15"),
+      },
+    ],
     galeria: {
       titulo: "Nuestros trabajos",
       texto: "Inspírate con algunos de nuestros trabajos favoritos. Síguenos en Instagram para ver más.",

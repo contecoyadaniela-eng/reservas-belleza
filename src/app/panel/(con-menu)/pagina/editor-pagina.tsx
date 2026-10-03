@@ -6,7 +6,7 @@ import { SubirImagen } from "@/components/panel/subir-imagen";
 import { AvisoBorrador, NotaBorrador } from "@/components/panel/aviso-borrador";
 import { borrarBorrador, guardarBorrador, leerBorrador } from "@/lib/borrador";
 import { FUENTES, type FuenteId } from "@/lib/pagina/fuentes";
-import type { Bloque, PaginaConfig, PaginaNegocio } from "@/lib/pagina/tipos";
+import { MAX_BLOQUES, type Bloque, type PaginaConfig, type PaginaNegocio } from "@/lib/pagina/tipos";
 
 type Colores = PaginaConfig["colores"];
 
@@ -101,8 +101,39 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
     }
   }
 
-  const bloque = (clave: "bloqueImagenTexto" | "bloqueTextoImagen", campo: keyof Bloque, valor: string) =>
-    cambiar((p) => ({ ...p, [clave]: { ...p[clave], [campo]: valor } }));
+  const cambiarBloque = (i: number, cambios: Partial<Bloque>) =>
+    cambiar((p) => ({ ...p, bloques: p.bloques.map((b, j) => (j === i ? { ...b, ...cambios } : b)) }));
+
+  function agregarBloque() {
+    cambiar((p) => {
+      const ultimo = p.bloques[p.bloques.length - 1];
+      const nuevo: Bloque = {
+        id: `bloque-${crypto.randomUUID().slice(0, 8)}`,
+        lado: ultimo?.lado === "izquierda" ? "derecha" : "izquierda",
+        titulo: "Nuevo título",
+        texto: "Escribe aquí el texto de esta sección.",
+        boton: "Ver servicios",
+        enlace: "servicios",
+        imagen: ultimo?.imagen ?? negocio.pagina.portada.imagenes[0],
+      };
+      return { ...p, bloques: [...p.bloques, nuevo] };
+    });
+  }
+
+  function quitarBloque(i: number) {
+    if (!confirm(`¿Quitar la sección ${i + 1}? Se quitará de tu página cuando publiques.`)) return;
+    cambiar((p) => ({ ...p, bloques: p.bloques.filter((_, j) => j !== i) }));
+  }
+
+  function moverBloque(i: number, direccion: -1 | 1) {
+    cambiar((p) => {
+      const destino = i + direccion;
+      if (destino < 0 || destino >= p.bloques.length) return p;
+      const copia = [...p.bloques];
+      [copia[i], copia[destino]] = [copia[destino], copia[i]];
+      return { ...p, bloques: copia };
+    });
+  }
 
   const vistaNegocio: PaginaNegocio = { ...negocio, nombre, pagina };
 
@@ -209,19 +240,51 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
           <p className="text-xs text-neutral-500">Los servicios se editan en la sección Servicios del menú.</p>
         </Grupo>
 
-        {(
-          [
-            ["bloqueImagenTexto", "Bloque foto + texto"],
-            ["bloqueTextoImagen", "Bloque texto + foto"],
-          ] as const
-        ).map(([clave, titulo]) => (
-          <Grupo key={clave} titulo={titulo}>
-            <SubirImagen negocioId={negocio.id} etiqueta="Foto" valor={pagina[clave].imagen} onCambio={(url) => bloque(clave, "imagen", url)} />
-            <Texto etiqueta="Título" valor={pagina[clave].titulo} max={80} onCambio={(v) => bloque(clave, "titulo", v)} />
-            <AreaTexto etiqueta="Texto" valor={pagina[clave].texto} max={400} onCambio={(v) => bloque(clave, "texto", v)} />
-            <Texto etiqueta="Texto del botón" valor={pagina[clave].boton} max={30} onCambio={(v) => bloque(clave, "boton", v)} />
-          </Grupo>
-        ))}
+        <Grupo titulo={`Secciones de contenido (${pagina.bloques.length})`}>
+          <p className="text-xs text-neutral-500">
+            Van entre los servicios y la galería. Agrega, quita u ordena las que quieras (hasta {MAX_BLOQUES}).
+          </p>
+          {pagina.bloques.map((b, i) => (
+            <div key={b.id} className="space-y-4 border border-neutral-200 p-4">
+              <div className="flex items-center justify-between">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.15em]">Sección {i + 1}</p>
+                <div className="flex items-center gap-1 text-sm">
+                  <button type="button" onClick={() => moverBloque(i, -1)} disabled={i === 0} className="px-2 py-1 hover:bg-neutral-100 disabled:opacity-30" title="Subir">↑</button>
+                  <button type="button" onClick={() => moverBloque(i, 1)} disabled={i === pagina.bloques.length - 1} className="px-2 py-1 hover:bg-neutral-100 disabled:opacity-30" title="Bajar">↓</button>
+                  <button type="button" onClick={() => quitarBloque(i)} className="ml-2 px-2 py-1 text-xs text-red-700 underline">Quitar</button>
+                </div>
+              </div>
+              <Opciones
+                valor={b.lado}
+                opciones={[["izquierda", "Foto a la izquierda"], ["derecha", "Foto a la derecha"]]}
+                onCambio={(v) => cambiarBloque(i, { lado: v })}
+              />
+              <SubirImagen negocioId={negocio.id} etiqueta="Foto" valor={b.imagen} onCambio={(url) => cambiarBloque(i, { imagen: url })} />
+              <Texto etiqueta="Título" valor={b.titulo} max={80} onCambio={(v) => cambiarBloque(i, { titulo: v })} />
+              <AreaTexto etiqueta="Texto" valor={b.texto} max={400} onCambio={(v) => cambiarBloque(i, { texto: v })} />
+              <div className="grid grid-cols-2 gap-3">
+                <Texto etiqueta="Botón (vacío = sin botón)" valor={b.boton} max={30} onCambio={(v) => cambiarBloque(i, { boton: v })} />
+                <label className="block">
+                  <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-600">El botón lleva a</span>
+                  <select value={b.enlace} onChange={(e) => cambiarBloque(i, { enlace: e.target.value as Bloque["enlace"] })} className={claseCampo}>
+                    <option value="servicios">Servicios</option>
+                    <option value="reservar">Reservar</option>
+                    <option value="contacto">Contacto</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          ))}
+          {pagina.bloques.length < MAX_BLOQUES && (
+            <button
+              type="button"
+              onClick={agregarBloque}
+              className="w-full border border-dashed border-neutral-400 py-3 text-[11px] uppercase tracking-[0.18em] hover:border-neutral-900"
+            >
+              + Agregar sección
+            </button>
+          )}
+        </Grupo>
 
         <Grupo titulo="Galería">
           <Texto etiqueta="Título manuscrito" valor={pagina.galeria.titulo} max={80} onCambio={(v) => cambiar((p) => ({ ...p, galeria: { ...p.galeria, titulo: v } }))} />
@@ -366,6 +429,31 @@ function AreaTexto({ etiqueta, valor, max, onCambio }: { etiqueta: string; valor
       <span className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-600">{etiqueta}</span>
       <textarea value={valor} maxLength={max} rows={4} onChange={(e) => onCambio(e.target.value)} className={claseCampo} />
     </label>
+  );
+}
+
+function Opciones<T extends string>({
+  valor,
+  opciones,
+  onCambio,
+}: {
+  valor: T;
+  opciones: [T, string][];
+  onCambio: (v: T) => void;
+}) {
+  return (
+    <div className="flex border border-neutral-300 text-[11px] uppercase tracking-[0.12em]">
+      {opciones.map(([v, texto]) => (
+        <button
+          key={v}
+          type="button"
+          onClick={() => onCambio(v)}
+          className={`flex-1 px-3 py-2 ${valor === v ? "bg-neutral-900 text-white" : "bg-white"}`}
+        >
+          {texto}
+        </button>
+      ))}
+    </div>
   );
 }
 

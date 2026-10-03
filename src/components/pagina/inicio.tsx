@@ -1,14 +1,49 @@
 import Image from "next/image";
 import Link from "next/link";
-import type { PaginaNegocio } from "@/lib/pagina/tipos";
+import type { Bloque, PaginaNegocio } from "@/lib/pagina/tipos";
 import { BotonLink, Seccion, TituloSeccion } from "./base";
 import { instagramUrl } from "./marco";
 import { ServicioCard } from "./servicio-card";
 
-// Home page blocks. Same structure for every business; only content changes.
+// Photo on the left: full-width band on the secondary background.
+// Photo on the right: framed on the main background (as in the reference design).
+function SeccionContenido({ bloque, slug }: { bloque: Bloque; slug: string }) {
+  const texto = (
+    <div className="flex flex-col items-center justify-center gap-5 text-center">
+      {bloque.titulo && <TituloSeccion className="max-w-xs">{bloque.titulo}</TituloSeccion>}
+      {bloque.texto && <p className="max-w-sm whitespace-pre-line text-sm leading-relaxed opacity-75">{bloque.texto}</p>}
+      {bloque.boton && <BotonLink href={`/${slug}/${bloque.enlace}`}>{bloque.boton}</BotonLink>}
+    </div>
+  );
+
+  if (bloque.lado === "izquierda") {
+    return (
+      <section className="grid bg-(--c-fondo-suave) md:grid-cols-2">
+        <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[480px]">
+          <Image src={bloque.imagen} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+        </div>
+        <div className="flex items-center justify-center px-8 py-14">{texto}</div>
+      </section>
+    );
+  }
+
+  return (
+    <Seccion>
+      <div className="grid items-center gap-10 md:grid-cols-2">
+        <div className="order-2 md:order-1">{texto}</div>
+        <div className="relative order-1 aspect-[4/5] md:order-2">
+          <Image src={bloque.imagen} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
+        </div>
+      </div>
+    </Seccion>
+  );
+}
+
+// Home page. Fixed structure for every business; the content sections in the
+// middle can be added, removed and reordered by the owner.
 export function Inicio({ negocio }: { negocio: PaginaNegocio }) {
   const { slug } = negocio;
-  const { portada, destacados, bloqueImagenTexto, bloqueTextoImagen, galeria } = negocio.pagina;
+  const { portada, destacados, bloques, galeria } = negocio.pagina;
 
   return (
     <>
@@ -46,29 +81,9 @@ export function Inicio({ negocio }: { negocio: PaginaNegocio }) {
         )}
       </Seccion>
 
-      <section className="grid bg-(--c-fondo-suave) md:grid-cols-2">
-        <div className="relative aspect-[4/3] md:aspect-auto md:min-h-[480px]">
-          <Image src={bloqueImagenTexto.imagen} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-        </div>
-        <div className="flex flex-col items-center justify-center gap-5 px-8 py-14 text-center">
-          <TituloSeccion className="max-w-xs">{bloqueImagenTexto.titulo}</TituloSeccion>
-          <p className="max-w-sm whitespace-pre-line text-sm leading-relaxed opacity-75">{bloqueImagenTexto.texto}</p>
-          <BotonLink href={`/${slug}/servicios`}>{bloqueImagenTexto.boton}</BotonLink>
-        </div>
-      </section>
-
-      <Seccion>
-        <div className="grid items-center gap-10 md:grid-cols-2">
-          <div className="order-2 flex flex-col items-center gap-5 text-center md:order-1">
-            <TituloSeccion className="max-w-xs">{bloqueTextoImagen.titulo}</TituloSeccion>
-            <p className="max-w-sm whitespace-pre-line text-sm leading-relaxed opacity-75">{bloqueTextoImagen.texto}</p>
-            <BotonLink href={`/${slug}/contacto`}>{bloqueTextoImagen.boton}</BotonLink>
-          </div>
-          <div className="relative order-1 aspect-[4/5] md:order-2">
-            <Image src={bloqueTextoImagen.imagen} alt="" fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover" />
-          </div>
-        </div>
-      </Seccion>
+      {bloques.map((b) => (
+        <SeccionContenido key={b.id} bloque={b} slug={slug} />
+      ))}
 
       <Seccion suave>
         <h2 className="p-logo text-center text-4xl text-(--c-acento) sm:text-5xl md:-rotate-2">{galeria.titulo}</h2>
