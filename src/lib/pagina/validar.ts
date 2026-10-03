@@ -78,6 +78,7 @@ export function combinarPagina(nombreNegocio: string, guardada: unknown): Pagina
     },
     anuncio: { texto: texto(objeto(g.anuncio).texto, base.anuncio.texto, 120) },
     portada: {
+      modo: portada.modo === "una" ? "una" : "dos",
       imagenes: [imagen(portadaImgs[0], base.portada.imagenes[0]), imagen(portadaImgs[1], base.portada.imagenes[1])],
       boton: texto(portada.boton, base.portada.boton, 30),
     },

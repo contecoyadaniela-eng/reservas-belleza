@@ -129,14 +129,27 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
         </Grupo>
 
         <Grupo titulo="Portada">
-          <div className="grid grid-cols-2 gap-3">
-            {[0, 1].map((i) => (
+          <div className="flex border border-neutral-300 text-[11px] uppercase tracking-[0.12em]">
+            {(["una", "dos"] as const).map((modo) => (
+              <button
+                key={modo}
+                type="button"
+                onClick={() => cambiar((p) => ({ ...p, portada: { ...p.portada, modo } }))}
+                className={`flex-1 px-3 py-2 ${pagina.portada.modo === modo ? "bg-neutral-900 text-white" : "bg-white"}`}
+              >
+                {modo === "una" ? "Una foto" : "Dos fotos"}
+              </button>
+            ))}
+          </div>
+          <div className={`grid gap-3 ${pagina.portada.modo === "dos" ? "grid-cols-2" : ""}`}>
+            {(pagina.portada.modo === "dos" ? [0, 1] : [0]).map((i) => (
               <SubirImagen
                 key={i}
+                vertical
                 negocioId={negocio.id}
-                etiqueta={i === 0 ? "Foto izquierda" : "Foto derecha"}
+                etiqueta={pagina.portada.modo === "una" ? "Foto de portada" : i === 0 ? "Foto izquierda" : "Foto derecha"}
                 valor={pagina.portada.imagenes[i]}
-                proporcion="aspect-[3/4]"
+                proporcion={pagina.portada.modo === "una" ? "aspect-[16/9]" : "aspect-[3/4]"}
                 onCambio={(url) =>
                   cambiar((p) => {
                     const imagenes = [...p.portada.imagenes] as [string, string];
@@ -175,6 +188,7 @@ export function EditorPagina({ negocio }: { negocio: PaginaNegocio }) {
             {[0, 1, 2].map((i) => (
               <SubirImagen
                 key={i}
+                vertical
                 negocioId={negocio.id}
                 etiqueta={`Foto ${i + 1}`}
                 valor={pagina.galeria.imagenes[i]}

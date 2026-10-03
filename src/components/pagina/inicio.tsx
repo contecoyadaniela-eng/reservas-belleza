@@ -12,10 +12,10 @@ export function Inicio({ negocio }: { negocio: PaginaNegocio }) {
 
   return (
     <>
-      <section className="relative grid h-[70vh] min-h-[420px] grid-cols-2">
-        {portada.imagenes.map((src, i) => (
+      <section className={`relative grid h-[70vh] min-h-[420px] ${portada.modo === "dos" ? "grid-cols-2" : ""}`}>
+        {portada.imagenes.slice(0, portada.modo === "dos" ? 2 : 1).map((src, i) => (
           <div key={i} className="relative bg-(--c-fondo-suave)">
-            <Image src={src} alt="" fill priority sizes="50vw" className="object-cover" />
+            <Image src={src} alt="" fill priority sizes={portada.modo === "dos" ? "50vw" : "100vw"} className="object-cover" />
           </div>
         ))}
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-8 bg-black/10 px-4 text-center">

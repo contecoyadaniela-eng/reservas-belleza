@@ -22,6 +22,7 @@ export function paginaInicial(nombre: string): PaginaConfig {
     letras: { logo: "homemade-apple", titulos: "manrope", texto: "manrope" },
     anuncio: { texto: "10% de descuento en tu primera cita · Reserva en línea" },
     portada: {
+      modo: "dos",
       imagenes: [foto("1487412947147-5cebf100ffc2"), foto("1610992015732-2449b76344bc")],
       boton: "Reservar",
     },

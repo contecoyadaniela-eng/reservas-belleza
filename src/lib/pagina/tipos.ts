@@ -25,7 +25,7 @@ export type PaginaConfig = {
   };
   letras: { logo: FuenteId; titulos: FuenteId; texto: FuenteId };
   anuncio: { texto: string };
-  portada: { imagenes: [string, string]; boton: string };
+  portada: { modo: "una" | "dos"; imagenes: [string, string]; boton: string };
   destacados: { titulo: string };
   bloqueImagenTexto: Bloque;
   bloqueTextoImagen: Bloque;

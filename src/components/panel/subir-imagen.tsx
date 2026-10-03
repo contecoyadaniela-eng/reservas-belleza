@@ -27,6 +27,7 @@ export function SubirImagen({
   onCambio,
   proporcion = "aspect-[4/3]",
   permitirQuitar = false,
+  vertical = false,
 }: {
   negocioId: string;
   etiqueta: string;
@@ -34,6 +35,7 @@ export function SubirImagen({
   onCambio: (url: string) => void;
   proporcion?: string;
   permitirQuitar?: boolean;
+  vertical?: boolean; // photo on top and button below, for narrow columns
 }) {
   const input = useRef<HTMLInputElement>(null);
   const [subiendo, setSubiendo] = useState(false);
@@ -67,9 +69,9 @@ export function SubirImagen({
   return (
     <div>
       <p className="text-[11px] font-medium uppercase tracking-[0.15em] text-neutral-600">{etiqueta}</p>
-      <div className="mt-2 flex items-center gap-3">
-        <div className={`relative w-24 shrink-0 overflow-hidden bg-neutral-100 ${proporcion}`}>
-          {valor && <Image src={valor} alt="" fill sizes="96px" className="object-cover" />}
+      <div className={`mt-2 flex gap-3 ${vertical ? "flex-col items-stretch" : "items-center"}`}>
+        <div className={`relative shrink-0 overflow-hidden bg-neutral-100 ${vertical ? "w-full" : "w-24"} ${proporcion}`}>
+          {valor && <Image src={valor} alt="" fill sizes={vertical ? "360px" : "96px"} className="object-cover" />}
         </div>
         <div className="flex flex-col items-start gap-1">
           <button
