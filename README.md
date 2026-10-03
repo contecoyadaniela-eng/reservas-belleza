@@ -47,6 +47,18 @@ En Vercel, las mismas claves se cargan en **Settings → Environment Variables**
 - **Prueba automática:** `npm run prueba:aislamiento` crea dos negocios de prueba, comprueba que ninguno ve al otro y los borra.
 - **Prueba manual:** crear dos cuentas con dos negocios; en el panel, la "Prueba de privacidad" debe mostrar 1 negocio y 1 persona en cada una.
 
+### Etapa 3: Personalización (en prueba)
+- Página pública con estructura fija para todos los negocios, estilo editorial: **Inicio · Servicios · Reservar · Mi tarjeta · Contacto**.
+- Panel con menú **Resumen · Mi página · Servicios · Contacto**.
+- **Mi página:** nombre, logo, 6 paletas listas o colores a mano, 3 tipos de letra, barra de anuncio, fotos y textos de cada bloque, con vista previa en vivo (computadora o celular) y botón "Guardar y publicar".
+- **Servicios:** agregar, quitar y ordenar; nombre, descripción, foto, duración y precio opcional (vacío = no se muestra); moneda de cualquier país de Sudamérica.
+- **Contacto:** dirección, horario, WhatsApp, correo e Instagram (los vacíos no se muestran).
+- Fotos en Supabase Storage (carpeta por negocio); se achican en el navegador antes de subir.
+- Un negocio nuevo empieza con textos y fotos de ejemplo (Unsplash) para que su página nunca se vea vacía.
+- Reservar y Mi tarjeta muestran contenido provisorio hasta las Etapas 5 y 7.
+- **Prueba automática:** `npm run prueba:aislamiento` ahora revisa 21 reglas (páginas, servicios, fotos y dirección web).
+- **Prueba manual:** cambiar un color y un servicio en el panel de Ana y verlos en su página pública.
+
 ## Cambios en la base de datos
 Cada cambio es un archivo en `supabase/migrations`. Para aplicarlos en Supabase:
 ```

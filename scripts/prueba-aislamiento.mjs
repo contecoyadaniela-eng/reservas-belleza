@@ -42,6 +42,8 @@ try {
     await as(u, () =>
       db.query("select public.crear_negocio($1, $2, $3)", [`Negocio ${u.slug}`, u.slug, "Prueba"]),
     );
+    const { rows } = await db.query("select id from public.negocios where slug = $1", [u.slug]);
+    u.negocioId = rows[0].id;
   }
 
   for (const [yo, otra, nombre] of [[ana, bea, "A"], [bea, ana, "B"]]) {
@@ -65,8 +67,59 @@ try {
         [otra.slug],
       );
       check(`El negocio ${nombre} no puede cambiar el otro negocio`, cambio.rowCount === 0);
+
+      const propio = await db.query(
+        "update public.negocios set pagina = '{\"anuncio\":{\"texto\":\"hola\"}}', moneda = 'PEN' where slug = $1",
+        [yo.slug],
+      );
+      check(`El negocio ${nombre} sí puede editar su propia página`, propio.rowCount === 1);
+
+      await db.query("savepoint slug");
+      try {
+        await db.query("update public.negocios set slug = 'otro-slug' where slug = $1", [yo.slug]);
+        check(`El negocio ${nombre} no puede cambiar su dirección web`, false);
+      } catch {
+        await db.query("rollback to savepoint slug");
+        check(`El negocio ${nombre} no puede cambiar su dirección web`, true);
+      }
+
+      await db.query(
+        "insert into public.servicios (negocio_id, nombre, duracion_min, precio) select id, 'Servicio ' || $1, 60, 1000 from public.negocios where slug = $1",
+        [yo.slug],
+      );
+      const misServicios = await db.query("select count(*)::int as n from public.servicios s join public.negocios n on n.id = s.negocio_id where n.slug = $1", [yo.slug]);
+      check(`El negocio ${nombre} sí puede crear sus servicios`, misServicios.rows[0].n === 1);
+
+      await db.query("savepoint servicio_ajeno");
+      try {
+        await db.query(
+          "insert into public.servicios (negocio_id, nombre, duracion_min) values ($1, 'intruso', 30)",
+          [otra.negocioId],
+        );
+        check(`El negocio ${nombre} no puede crear servicios en el otro negocio`, false);
+      } catch {
+        await db.query("rollback to savepoint servicio_ajeno");
+        check(`El negocio ${nombre} no puede crear servicios en el otro negocio`, true);
+      }
+
+      const fotoPropia = await db.query("select public.es_duena_carpeta($1) as ok", [yo.negocioId]);
+      const fotoAjena = await db.query("select public.es_duena_carpeta($1) as ok", [otra.negocioId]);
+      check(
+        `El negocio ${nombre} solo puede subir fotos a su propia carpeta`,
+        fotoPropia.rows[0].ok === true && fotoAjena.rows[0].ok === false,
+      );
     });
   }
+
+  // B tries to edit and delete A's service.
+  await as(bea, async () => {
+    const editar = await db.query(
+      "update public.servicios set precio = 1 where negocio_id = $1",
+      [ana.negocioId],
+    );
+    const borrar = await db.query("delete from public.servicios where negocio_id = $1", [ana.negocioId]);
+    check("Un negocio no puede editar ni borrar servicios de otro", editar.rowCount === 0 && borrar.rowCount === 0);
+  });
 
   await as(null, async () => {
     try {
@@ -79,9 +132,21 @@ try {
     }
     const publico = await db.query("select * from public.negocio_publico($1)", [ana.slug]);
     check(
-      "Un visitante sin cuenta sí ve la página pública (solo nombre y dirección)",
-      publico.rows.length === 1 && Object.keys(publico.rows[0]).join(",") === "nombre,slug",
+      "Un visitante sin cuenta sí ve la página pública, sin datos del equipo",
+      publico.rows.length === 1 && !("user_id" in publico.rows[0]) && publico.rows[0].moneda === "PEN",
     );
+
+    const servicios = await db.query("select count(*)::int as n from public.servicios where negocio_id = $1", [ana.negocioId]);
+    check("Un visitante sin cuenta sí ve los servicios publicados", servicios.rows[0].n === 1);
+
+    await db.query("savepoint anon_insert");
+    try {
+      await db.query("insert into public.servicios (negocio_id, nombre, duracion_min) values ($1, 'spam', 30)", [ana.negocioId]);
+      check("Un visitante sin cuenta no puede crear servicios", false);
+    } catch {
+      await db.query("rollback to savepoint anon_insert");
+      check("Un visitante sin cuenta no puede crear servicios", true);
+    }
   });
 } finally {
   await db.query("rollback");

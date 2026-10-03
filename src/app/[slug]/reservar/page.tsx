@@ -11,7 +11,7 @@ export default async function ReservarPage({ params }: PageProps<"/[slug]/reserv
         <TituloSeccion>Reserva tu cita</TituloSeccion>
         <p className="text-sm leading-relaxed opacity-70">
           Muy pronto podrás elegir tu servicio, tu profesional y tu hora aquí mismo.
-          Mientras tanto, escríbenos por WhatsApp al {negocio.contacto.whatsapp}.
+          {negocio.contacto.whatsapp && ` Mientras tanto, escríbenos por WhatsApp al ${negocio.contacto.whatsapp}.`}
         </p>
         <BotonLink href={`/${slug}/servicios`} variante="borde">
           Ver servicios

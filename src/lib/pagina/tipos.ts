@@ -1,15 +1,17 @@
 import type { FuenteId } from "./fuentes";
+import type { MonedaId } from "./monedas";
 
 export type Bloque = {
-  visible: boolean;
   titulo: string;
   texto: string;
   boton: string;
   imagen: string;
 };
 
-// Everything a business can customize on its public page.
+// Everything a business can customize on its home page. The structure
+// (which blocks exist and their order) is the same for every business.
 export type PaginaConfig = {
+  logo: string;
   colores: {
     fondo: string;
     fondoSuave: string;
@@ -19,12 +21,12 @@ export type PaginaConfig = {
     botonTexto: string;
   };
   letras: { logo: FuenteId; titulos: FuenteId; texto: FuenteId };
-  anuncio: { visible: boolean; texto: string };
-  portada: { visible: boolean; imagenes: [string, string]; boton: string };
-  destacados: { visible: boolean; titulo: string };
+  anuncio: { texto: string };
+  portada: { imagenes: [string, string]; boton: string };
+  destacados: { titulo: string };
   bloqueImagenTexto: Bloque;
   bloqueTextoImagen: Bloque;
-  galeria: { visible: boolean; titulo: string; texto: string; boton: string; imagenes: string[] };
+  galeria: { titulo: string; texto: string; boton: string; imagenes: [string, string, string] };
 };
 
 export type Servicio = {
@@ -32,9 +34,8 @@ export type Servicio = {
   nombre: string;
   descripcion: string;
   duracionMin: number;
-  precio: number;
+  precio: number | null; // null = no mostrar precio
   foto: string;
-  destacado: boolean;
 };
 
 export type Contacto = {
@@ -55,10 +56,10 @@ export type TarjetaConfig = {
 };
 
 export type PaginaNegocio = {
+  id: string;
   nombre: string;
   slug: string;
-  moneda: string;
-  mostrarPrecios: boolean;
+  moneda: MonedaId;
   pagina: PaginaConfig;
   servicios: Servicio[];
   contacto: Contacto;

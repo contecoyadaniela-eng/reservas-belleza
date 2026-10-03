@@ -9,6 +9,16 @@ export function Card({ children }: { children: ReactNode }) {
   );
 }
 
+// White box used inside the panel pages.
+export function Caja({ titulo, children, className = "" }: { titulo?: string; children: ReactNode; className?: string }) {
+  return (
+    <section className={`bg-white p-6 sm:p-8 ${className}`}>
+      {titulo && <h2 className="mb-5 text-[11px] font-semibold uppercase tracking-[0.18em] text-neutral-500">{titulo}</h2>}
+      {children}
+    </section>
+  );
+}
+
 export function Field({
   label,
   hint,
