@@ -12,6 +12,7 @@ export function paginaInicial(nombre: string): PaginaConfig {
       fondo: "#ffffff",
       fondoSuave: "#f4f4f5",
       texto: "#111111",
+      titulos: "#111111",
       acento: "#d2234d",
       boton: "#111111",
       botonTexto: "#ffffff",

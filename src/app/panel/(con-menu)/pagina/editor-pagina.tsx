@@ -9,18 +9,19 @@ import type { Bloque, PaginaConfig, PaginaNegocio } from "@/lib/pagina/tipos";
 type Colores = PaginaConfig["colores"];
 
 const PALETAS: { nombre: string; colores: Colores }[] = [
-  { nombre: "Editorial", colores: { fondo: "#ffffff", fondoSuave: "#f4f4f5", texto: "#111111", acento: "#d2234d", boton: "#111111", botonTexto: "#ffffff", anuncioFondo: "#111111", anuncioTexto: "#ffffff" } },
-  { nombre: "Rosa palo", colores: { fondo: "#fffafa", fondoSuave: "#f9e4e6", texto: "#3b2a2c", acento: "#c45a6b", boton: "#c45a6b", botonTexto: "#ffffff", anuncioFondo: "#c45a6b", anuncioTexto: "#ffffff" } },
-  { nombre: "Nude", colores: { fondo: "#faf7f2", fondoSuave: "#efe6da", texto: "#3d342c", acento: "#a47148", boton: "#3d342c", botonTexto: "#faf7f2", anuncioFondo: "#3d342c", anuncioTexto: "#faf7f2" } },
-  { nombre: "Lavanda", colores: { fondo: "#fbfaff", fondoSuave: "#ece8f7", texto: "#2e2a3d", acento: "#7c5cbf", boton: "#2e2a3d", botonTexto: "#ffffff", anuncioFondo: "#2e2a3d", anuncioTexto: "#ffffff" } },
-  { nombre: "Salvia", colores: { fondo: "#f9faf7", fondoSuave: "#e4eadf", texto: "#2b3327", acento: "#6b8f5e", boton: "#2b3327", botonTexto: "#ffffff", anuncioFondo: "#2b3327", anuncioTexto: "#ffffff" } },
-  { nombre: "Noche", colores: { fondo: "#141414", fondoSuave: "#222222", texto: "#f4f1ec", acento: "#e8b4b8", boton: "#e8b4b8", botonTexto: "#141414", anuncioFondo: "#e8b4b8", anuncioTexto: "#141414" } },
+  { nombre: "Editorial", colores: { fondo: "#ffffff", fondoSuave: "#f4f4f5", texto: "#111111", titulos: "#111111", acento: "#d2234d", boton: "#111111", botonTexto: "#ffffff", anuncioFondo: "#111111", anuncioTexto: "#ffffff" } },
+  { nombre: "Rosa palo", colores: { fondo: "#fffafa", fondoSuave: "#f9e4e6", texto: "#3b2a2c", titulos: "#3b2a2c", acento: "#c45a6b", boton: "#c45a6b", botonTexto: "#ffffff", anuncioFondo: "#c45a6b", anuncioTexto: "#ffffff" } },
+  { nombre: "Nude", colores: { fondo: "#faf7f2", fondoSuave: "#efe6da", texto: "#3d342c", titulos: "#3d342c", acento: "#a47148", boton: "#3d342c", botonTexto: "#faf7f2", anuncioFondo: "#3d342c", anuncioTexto: "#faf7f2" } },
+  { nombre: "Lavanda", colores: { fondo: "#fbfaff", fondoSuave: "#ece8f7", texto: "#2e2a3d", titulos: "#2e2a3d", acento: "#7c5cbf", boton: "#2e2a3d", botonTexto: "#ffffff", anuncioFondo: "#2e2a3d", anuncioTexto: "#ffffff" } },
+  { nombre: "Salvia", colores: { fondo: "#f9faf7", fondoSuave: "#e4eadf", texto: "#2b3327", titulos: "#2b3327", acento: "#6b8f5e", boton: "#2b3327", botonTexto: "#ffffff", anuncioFondo: "#2b3327", anuncioTexto: "#ffffff" } },
+  { nombre: "Noche", colores: { fondo: "#141414", fondoSuave: "#222222", texto: "#f4f1ec", titulos: "#f4f1ec", acento: "#e8b4b8", boton: "#e8b4b8", botonTexto: "#141414", anuncioFondo: "#e8b4b8", anuncioTexto: "#141414" } },
 ];
 
 const NOMBRES_COLORES: { clave: keyof Colores; nombre: string; ayuda: string }[] = [
   { clave: "fondo", nombre: "Fondo", ayuda: "Color principal de la página" },
   { clave: "fondoSuave", nombre: "Fondo secundario", ayuda: "Bloques grises y galería" },
-  { clave: "texto", nombre: "Texto", ayuda: "Letras de la página" },
+  { clave: "titulos", nombre: "Títulos", ayuda: "Títulos, nombres de servicios y del negocio" },
+  { clave: "texto", nombre: "Texto", ayuda: "Párrafos y descripciones" },
   { clave: "acento", nombre: "Acento", ayuda: "Título manuscrito de la galería" },
   { clave: "boton", nombre: "Botones", ayuda: "Fondo de los botones" },
   { clave: "botonTexto", nombre: "Texto de botones", ayuda: "Letras dentro de los botones" },

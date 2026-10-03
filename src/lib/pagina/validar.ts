@@ -63,6 +63,7 @@ export function combinarPagina(nombreNegocio: string, guardada: unknown): Pagina
       fondo,
       fondoSuave: color(colores.fondoSuave, base.colores.fondoSuave),
       texto: textoColor,
+      titulos: color(colores.titulos, textoColor),
       acento: color(colores.acento, base.colores.acento),
       boton: color(colores.boton, base.colores.boton),
       botonTexto: color(colores.botonTexto, base.colores.botonTexto),

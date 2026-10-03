@@ -24,6 +24,7 @@ export function MarcoNegocio({ negocio, children }: { negocio: PaginaNegocio; ch
     "--c-fondo": colores.fondo,
     "--c-fondo-suave": colores.fondoSuave,
     "--c-texto": colores.texto,
+    "--c-titulos": colores.titulos,
     "--c-acento": colores.acento,
     "--c-boton": colores.boton,
     "--c-boton-texto": colores.botonTexto,
@@ -56,7 +57,7 @@ export function MarcoNegocio({ negocio, children }: { negocio: PaginaNegocio; ch
 
       <header className="sticky top-0 z-20 border-b border-black/5 bg-(--c-fondo)/95 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-6 px-4 py-3 sm:px-8">
-          <Link href={`/${slug}`} className="p-logo shrink-0 text-xl">
+          <Link href={`/${slug}`} className="p-logo shrink-0 text-xl text-(--c-titulos)">
             {marca}
           </Link>
           <div className="hidden md:block">
@@ -74,7 +75,7 @@ export function MarcoNegocio({ negocio, children }: { negocio: PaginaNegocio; ch
       <footer className="border-t border-black/5">
         <div className="mx-auto grid max-w-6xl gap-10 px-4 py-14 text-sm sm:px-8 md:grid-cols-3">
           <div>
-            <p className="p-logo text-2xl">{negocio.nombre}</p>
+            <p className="p-logo text-2xl text-(--c-titulos)">{negocio.nombre}</p>
             {contacto.horarioTexto && <p className="mt-4 max-w-xs opacity-70">{contacto.horarioTexto}</p>}
           </div>
           <div className="space-y-2">

@@ -16,6 +16,7 @@ export type PaginaConfig = {
     fondo: string;
     fondoSuave: string;
     texto: string;
+    titulos: string;
     acento: string;
     boton: string;
     botonTexto: string;

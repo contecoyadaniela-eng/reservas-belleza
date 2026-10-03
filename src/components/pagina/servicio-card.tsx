@@ -17,7 +17,7 @@ export function ServicioCard({ servicio, slug, moneda }: { servicio: Servicio; s
           />
         )}
       </div>
-      <h3 className="p-titulos mt-3 text-sm font-medium">{servicio.nombre}</h3>
+      <h3 className="p-titulos mt-3 text-sm font-medium text-(--c-titulos)">{servicio.nombre}</h3>
       {servicio.descripcion && <p className="mt-1 line-clamp-2 text-xs opacity-60">{servicio.descripcion}</p>}
       <div className="mt-3 flex items-center justify-between gap-2">
         <span className="text-sm">

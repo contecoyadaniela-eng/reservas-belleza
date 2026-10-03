@@ -44,6 +44,6 @@ export function Seccion({
 
 export function TituloSeccion({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <h2 className={`p-titulos text-2xl font-light tracking-tight sm:text-3xl ${className}`}>{children}</h2>
+    <h2 className={`p-titulos text-2xl font-light tracking-tight text-(--c-titulos) sm:text-3xl ${className}`}>{children}</h2>
   );
 }
