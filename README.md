@@ -50,7 +50,8 @@ En Vercel, las mismas claves se cargan en **Settings → Environment Variables**
 ### Etapa 3: Personalización (en prueba)
 - Página pública con estructura fija para todos los negocios, estilo editorial: **Inicio · Servicios · Reservar · Mi tarjeta · Contacto**.
 - Panel con menú **Resumen · Mi página · Servicios · Contacto**.
-- **Mi página:** nombre, logo, 6 paletas listas o colores a mano, 3 tipos de letra, barra de anuncio, fotos y textos de cada bloque, con vista previa en vivo (computadora o celular) y botón "Guardar y publicar".
+- **Mi página:** nombre, logo, 6 paletas listas o 9 colores a mano, 3 tipos de letra, barra de anuncio, portada de una o dos fotos, **secciones de contenido libres** (agregar, quitar y ordenar hasta 8, con foto a la izquierda o a la derecha) y galería, con vista previa en vivo (computadora o celular) y botón "Guardar y publicar".
+- Los cambios sin publicar se guardan como borrador en el navegador y se recuperan al recargar.
 - **Servicios:** agregar, quitar y ordenar; nombre, descripción, foto, duración y precio opcional (vacío = no se muestra); moneda de cualquier país de Sudamérica.
 - **Contacto:** dirección, horario, WhatsApp, correo e Instagram (los vacíos no se muestran).
 - Fotos en Supabase Storage (carpeta por negocio); se achican en el navegador antes de subir.
