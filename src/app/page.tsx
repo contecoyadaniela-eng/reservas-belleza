@@ -10,8 +10,7 @@ export default async function Home() {
   return (
     <main className="flex flex-1 items-center justify-center bg-neutral-100 px-4 py-16">
       <div className="w-full max-w-md bg-white p-8 text-center">
-        <div className="text-5xl">💅</div>
-        <h1 className="mt-4 text-2xl font-semibold text-neutral-800">
+        <h1 className="text-2xl font-semibold text-neutral-800">
           Reservas de belleza
         </h1>
         <p className="mt-2 text-neutral-600">
