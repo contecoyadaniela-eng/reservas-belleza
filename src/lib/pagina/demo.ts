@@ -15,6 +15,8 @@ export function paginaInicial(nombre: string): PaginaConfig {
       acento: "#d2234d",
       boton: "#111111",
       botonTexto: "#ffffff",
+      anuncioFondo: "#111111",
+      anuncioTexto: "#ffffff",
     },
     letras: { logo: "homemade-apple", titulos: "manrope", texto: "manrope" },
     anuncio: { texto: "10% de descuento en tu primera cita · Reserva en línea" },

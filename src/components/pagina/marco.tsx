@@ -46,7 +46,10 @@ export function MarcoNegocio({ negocio, children }: { negocio: PaginaNegocio; ch
       className={`${todasLasFuentesClassName} p-texto flex min-h-full flex-1 flex-col bg-(--c-fondo) text-(--c-texto)`}
     >
       {anuncio.texto && (
-        <div className="bg-(--c-texto) px-4 py-2 text-center text-[11px] tracking-wide text-(--c-fondo)">
+        <div
+          className="px-4 py-2 text-center text-[11px] tracking-wide"
+          style={{ backgroundColor: colores.anuncioFondo, color: colores.anuncioTexto }}
+        >
           {anuncio.texto}
         </div>
       )}

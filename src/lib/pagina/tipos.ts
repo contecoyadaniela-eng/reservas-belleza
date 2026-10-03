@@ -19,6 +19,8 @@ export type PaginaConfig = {
     acento: string;
     boton: string;
     botonTexto: string;
+    anuncioFondo: string;
+    anuncioTexto: string;
   };
   letras: { logo: FuenteId; titulos: FuenteId; texto: FuenteId };
   anuncio: { texto: string };

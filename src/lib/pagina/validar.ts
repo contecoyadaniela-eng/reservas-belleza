@@ -54,15 +54,21 @@ export function combinarPagina(nombreNegocio: string, guardada: unknown): Pagina
   const portadaImgs = Array.isArray(portada.imagenes) ? portada.imagenes : [];
   const galeriaImgs = Array.isArray(galeria.imagenes) ? galeria.imagenes : [];
 
+  const fondo = color(colores.fondo, base.colores.fondo);
+  const textoColor = color(colores.texto, base.colores.texto);
+
   return {
     logo: imagen(g.logo, base.logo, true),
     colores: {
-      fondo: color(colores.fondo, base.colores.fondo),
+      fondo,
       fondoSuave: color(colores.fondoSuave, base.colores.fondoSuave),
-      texto: color(colores.texto, base.colores.texto),
+      texto: textoColor,
       acento: color(colores.acento, base.colores.acento),
       boton: color(colores.boton, base.colores.boton),
       botonTexto: color(colores.botonTexto, base.colores.botonTexto),
+      // Pages saved before these existed keep their previous look (text color bar).
+      anuncioFondo: color(colores.anuncioFondo, textoColor),
+      anuncioTexto: color(colores.anuncioTexto, fondo),
     },
     letras: {
       logo: fuente(letras.logo, base.letras.logo),
